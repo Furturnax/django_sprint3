@@ -5,20 +5,9 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class Category(models.Model):
-    """Модель таблицы Категория."""
+class PublishedModel(models.Model):
+    """Модель абстрактного класса публикация."""
 
-    title = models.CharField(
-        max_length=256,
-        verbose_name='Заголовок'
-    )
-    description = models.TextField(verbose_name='Описание')
-    slug = models.SlugField(
-        unique=True,
-        verbose_name='Идентификатор',
-        help_text='Идентификатор страницы для URL; разрешены символы '
-        'латиницы, цифры, дефис и подчёркивание.'
-    )
     is_published = models.BooleanField(
         default=True,
         verbose_name='Опубликовано',
@@ -30,39 +19,47 @@ class Category(models.Model):
     )
 
     class Meta:
+        abstract = True
+
+
+class TitledModel(models.Model):
+    """Модель абстрактного класса заголовок."""
+
+    title = models.CharField(max_length=256, verbose_name='Заголовок')
+
+    class Meta:
+        abstract = True
+
+
+class Category(TitledModel, PublishedModel):
+    """Модель таблицы Категория."""
+
+    description = models.TextField(verbose_name='Описание')
+    slug = models.SlugField(
+        unique=True,
+        verbose_name='Идентификатор',
+        help_text='Идентификатор страницы для URL; разрешены символы '
+        'латиницы, цифры, дефис и подчёркивание.'
+    )
+
+    class Meta:
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
 
-class Location(models.Model):
+class Location(PublishedModel):
     """Модель таблицы Локация."""
 
-    name = models.CharField(
-        max_length=256,
-        verbose_name='Название места'
-    )
-    is_published = models.BooleanField(
-        default=True,
-        verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Добавлено'
-    )
+    name = models.CharField(max_length=256, verbose_name='Название места')
 
     class Meta:
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
 
-class Post(models.Model):
+class Post(TitledModel, PublishedModel):
     """Модель таблицы Публикация."""
 
-    title = models.CharField(
-        max_length=256,
-        verbose_name='Заголовок'
-    )
     text = models.TextField(verbose_name='Текст')
     pub_date = models.DateTimeField(
         verbose_name='Дата и время публикации',
@@ -87,17 +84,7 @@ class Post(models.Model):
         null=True,
         verbose_name='Категория'
     )
-    is_published = models.BooleanField(
-        default=True,
-        verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Добавлено'
-    )
 
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
-        
