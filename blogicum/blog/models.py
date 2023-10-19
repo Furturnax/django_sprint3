@@ -22,7 +22,7 @@ class Category(models.Model):
     is_published = models.BooleanField(
         default=True,
         verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию',
+        help_text='Снимите галочку, чтобы скрыть публикацию.',
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -44,7 +44,7 @@ class Location(models.Model):
     is_published = models.BooleanField(
         default=True,
         verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию'
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -65,7 +65,8 @@ class Post(models.Model):
     )
     text = models.TextField(verbose_name='Текст')
     pub_date = models.DateTimeField(
-        verbose_name='Если установить дату и время в будущем — можно '
+        verbose_name='Дата и время публикации',
+        help_text='Если установить дату и время в будущем — можно '
         'делать отложенные публикации.'
     )
     author = models.ForeignKey(
@@ -89,7 +90,7 @@ class Post(models.Model):
     is_published = models.BooleanField(
         default=True,
         verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию'
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -99,3 +100,4 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
+        
