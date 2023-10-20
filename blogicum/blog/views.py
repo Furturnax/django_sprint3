@@ -14,7 +14,7 @@ class PostFilter:
         self.filter_criteries = {
             'is_published': True,
             'pub_date__lte': now(),
-            'category__is_published': True,
+            'category__is_published': True
         }
 
     def by_category(self, category_slug):
@@ -35,7 +35,7 @@ def index(request):
 def post_detail(request, post_id):
     post = get_object_or_404(
         PostFilter(Post.objects).get_queryset(),
-        pk=post_id,
+        pk=post_id
     )
     return render(request, 'blog/detail.html', {'post': post})
 
@@ -44,7 +44,8 @@ def category_posts(request, category_slug):
     category = get_object_or_404(
         Category.objects,
         slug=category_slug,
-        is_published=True)
+        is_published=True
+    )
     post_list = PostFilter(Post.objects).by_category(
         category_slug).get_queryset()
     return render(request, 'blog/category.html', {'category': category,

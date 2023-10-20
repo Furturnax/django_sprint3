@@ -12,16 +12,16 @@ class PublishedCreatedModel(models.Model):
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.',
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
     created_at = models.DateTimeField(
         'Добавлено',
-        auto_now_add=True,
+        auto_now_add=True
     )
 
     class Meta:
         abstract = True
-        ordering = ['-created_at',]
+        ordering = ['-created_at']
 
 
 class TitleModel(models.Model):
@@ -29,7 +29,7 @@ class TitleModel(models.Model):
 
     title = models.CharField(
         'Заголовок',
-        max_length=TITLE_MAX_LENGTH,
+        max_length=TITLE_MAX_LENGTH
     )
 
     class Meta:
@@ -39,12 +39,12 @@ class TitleModel(models.Model):
 class Category(TitleModel, PublishedCreatedModel):
     """Модель таблицы Категория."""
 
-    description = models.TextField('Описание',)
+    description = models.TextField('Описание')
     slug = models.SlugField(
         'Идентификатор',
         unique=True,
         help_text='Идентификатор страницы для URL; разрешены символы '
-        'латиницы, цифры, дефис и подчёркивание.',
+        'латиницы, цифры, дефис и подчёркивание.'
     )
 
     class Meta:
@@ -60,7 +60,7 @@ class Location(PublishedCreatedModel):
 
     name = models.CharField(
         'Название места',
-        max_length=NAME_MAX_LENGTH,
+        max_length=NAME_MAX_LENGTH
     )
 
     class Meta:
@@ -74,17 +74,17 @@ class Location(PublishedCreatedModel):
 class Post(TitleModel, PublishedCreatedModel):
     """Модель таблицы Публикация."""
 
-    text = models.TextField('Текст',)
+    text = models.TextField('Текст')
     pub_date = models.DateTimeField(
         'Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно '
-        'делать отложенные публикации.',
+        'делать отложенные публикации.'
     )
     author = models.ForeignKey(
         User,
         verbose_name='Автор публикации',
         on_delete=models.CASCADE,
-        related_name='publications',
+        related_name='publications'
     )
     location = models.ForeignKey(
         Location,
@@ -92,20 +92,20 @@ class Post(TitleModel, PublishedCreatedModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='publications',
+        related_name='publications'
     )
     category = models.ForeignKey(
         Category,
         verbose_name='Категория',
         on_delete=models.SET_NULL,
         null=True,
-        related_name='publications',
+        related_name='publications'
     )
 
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
-        ordering = ['-pub_date',]
+        ordering = ['-pub_date']
 
     def __str__(self):
         return self.title
