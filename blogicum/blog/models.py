@@ -1,90 +1,111 @@
 from django.db import models
-
 from django.contrib.auth import get_user_model
+
+from blog.const import TITLE_MAX_LENGTH, NAME_MAX_LENGTH
 
 User = get_user_model()
 
 
-class PublishedModel(models.Model):
+class PublishedCreatedModel(models.Model):
     """Модель абстрактного класса публикация."""
 
     is_published = models.BooleanField(
+        'Опубликовано',
         default=True,
-        verbose_name='Опубликовано',
         help_text='Снимите галочку, чтобы скрыть публикацию.',
     )
     created_at = models.DateTimeField(
+        'Добавлено',
         auto_now_add=True,
-        verbose_name='Добавлено'
+    )
+
+    class Meta:
+        abstract = True
+        ordering = ['-created_at',]
+
+
+class TitleModel(models.Model):
+    """Модель абстрактного класса заголовок."""
+
+    title = models.CharField(
+        'Заголовок',
+        max_length=TITLE_MAX_LENGTH,
     )
 
     class Meta:
         abstract = True
 
 
-class TitledModel(models.Model):
-    """Модель абстрактного класса заголовок."""
-
-    title = models.CharField(max_length=256, verbose_name='Заголовок')
-
-    class Meta:
-        abstract = True
-
-
-class Category(TitledModel, PublishedModel):
+class Category(TitleModel, PublishedCreatedModel):
     """Модель таблицы Категория."""
 
-    description = models.TextField(verbose_name='Описание')
+    description = models.TextField('Описание',)
     slug = models.SlugField(
+        'Идентификатор',
         unique=True,
-        verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL; разрешены символы '
-        'латиницы, цифры, дефис и подчёркивание.'
+        'латиницы, цифры, дефис и подчёркивание.',
     )
 
     class Meta:
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        return self.title
 
-class Location(PublishedModel):
+
+class Location(PublishedCreatedModel):
     """Модель таблицы Локация."""
 
-    name = models.CharField(max_length=256, verbose_name='Название места')
+    name = models.CharField(
+        'Название места',
+        max_length=NAME_MAX_LENGTH,
+    )
 
     class Meta:
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
+    def __str__(self):
+        return self.name
 
-class Post(TitledModel, PublishedModel):
+
+class Post(TitleModel, PublishedCreatedModel):
     """Модель таблицы Публикация."""
 
-    text = models.TextField(verbose_name='Текст')
+    text = models.TextField('Текст',)
     pub_date = models.DateTimeField(
-        verbose_name='Дата и время публикации',
+        'Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно '
-        'делать отложенные публикации.'
+        'делать отложенные публикации.',
     )
     author = models.ForeignKey(
         User,
+        verbose_name='Автор публикации',
         on_delete=models.CASCADE,
-        verbose_name='Автор публикации'
+        related_name='publications',
     )
     location = models.ForeignKey(
         Location,
+        verbose_name='Местоположение',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name='Местоположение'
+        related_name='publications',
     )
     category = models.ForeignKey(
         Category,
+        verbose_name='Категория',
         on_delete=models.SET_NULL,
         null=True,
-        verbose_name='Категория'
+        related_name='publications',
     )
 
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
+        ordering = ['-pub_date',]
+
+    def __str__(self):
+        return self.title
