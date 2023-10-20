@@ -21,7 +21,7 @@ class PublishedCreatedModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-created_at']
+        ordering = ('-created_at',)
 
 
 class TitleModel(models.Model):
@@ -84,7 +84,7 @@ class Post(TitleModel, PublishedCreatedModel):
         User,
         verbose_name='Автор публикации',
         on_delete=models.CASCADE,
-        related_name='publications'
+        related_name='authors'
     )
     location = models.ForeignKey(
         Location,
@@ -92,20 +92,20 @@ class Post(TitleModel, PublishedCreatedModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='publications'
+        related_name='locations'
     )
     category = models.ForeignKey(
         Category,
         verbose_name='Категория',
         on_delete=models.SET_NULL,
         null=True,
-        related_name='publications'
+        related_name='categories'
     )
 
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.title
