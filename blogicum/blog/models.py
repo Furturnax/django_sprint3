@@ -47,7 +47,7 @@ class Category(TitleModel, PublishedCreatedModel):
         'латиницы, цифры, дефис и подчёркивание.'
     )
 
-    class Meta:
+    class Meta(PublishedCreatedModel.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
@@ -63,7 +63,7 @@ class Location(PublishedCreatedModel):
         max_length=MAX_LENGTH
     )
 
-    class Meta:
+    class Meta(PublishedCreatedModel.Meta):
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 

@@ -29,6 +29,6 @@ def category_posts(request, category_slug):
         slug=category_slug,
         is_published=True
     )
-    post_list = filter_posts(Post.objects).filter(category__slug=category_slug)
+    post_list = filter_posts(category.posts.all())
     return render(request, 'blog/category.html', {'category': category,
                                                   'post_list': post_list})
