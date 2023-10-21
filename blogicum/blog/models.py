@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from blog.const import TITLE_OR_NAME_MAX_LENGTH, TITLE_OR_NAME_SLICE
+from blog.const import MAX_LENGTH, SLICE
 
 User = get_user_model()
 
@@ -29,7 +29,7 @@ class TitleModel(models.Model):
 
     title = models.CharField(
         'Заголовок',
-        max_length=TITLE_OR_NAME_MAX_LENGTH
+        max_length=MAX_LENGTH
     )
 
     class Meta:
@@ -52,7 +52,7 @@ class Category(TitleModel, PublishedCreatedModel):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.title[:TITLE_OR_NAME_SLICE]
+        return self.title[:SLICE]
 
 
 class Location(PublishedCreatedModel):
@@ -60,7 +60,7 @@ class Location(PublishedCreatedModel):
 
     name = models.CharField(
         'Название места',
-        max_length=TITLE_OR_NAME_MAX_LENGTH
+        max_length=MAX_LENGTH
     )
 
     class Meta:
@@ -68,7 +68,7 @@ class Location(PublishedCreatedModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
-        return self.name[:TITLE_OR_NAME_SLICE]
+        return self.name[:SLICE]
 
 
 class Post(TitleModel, PublishedCreatedModel):
@@ -106,4 +106,4 @@ class Post(TitleModel, PublishedCreatedModel):
         default_related_name = 'posts'
 
     def __str__(self):
-        return self.title[:TITLE_OR_NAME_SLICE]
+        return self.title[:SLICE]

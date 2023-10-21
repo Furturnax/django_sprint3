@@ -5,8 +5,8 @@ from blog.models import Category, Post
 from blog.const import INDEX_LIMIT
 
 
-def filter_posts():
-    return Post.objects.filter(
+def filter_posts(query_set):
+    return query_set.filter(
         is_published=True,
         pub_date__lte=now(),
         category__is_published=True,
@@ -14,12 +14,12 @@ def filter_posts():
 
 
 def index(request):
-    post_list = filter_posts()[:INDEX_LIMIT]
+    post_list = filter_posts(Post.objects)[:INDEX_LIMIT]
     return render(request, 'blog/index.html', {'post_list': post_list})
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(filter_posts(), pk=post_id)
+    post = get_object_or_404(filter_posts(Post.objects), pk=post_id)
     return render(request, 'blog/detail.html', {'post': post})
 
 
@@ -29,6 +29,6 @@ def category_posts(request, category_slug):
         slug=category_slug,
         is_published=True
     )
-    post_list = filter_posts().filter(category__slug=category_slug)
+    post_list = category.posts.filter(category__slug=category_slug)
     return render(request, 'blog/category.html', {'category': category,
                                                   'post_list': post_list})
