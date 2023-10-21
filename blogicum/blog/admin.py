@@ -8,6 +8,7 @@ admin.site.empty_value_display = 'Не задано'
 admin.site.unregister(Group)
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """Настройка раздела Категории."""
 
@@ -19,6 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
 
 
+@admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     """Настройка раздела Местоположения."""
 
@@ -29,6 +31,7 @@ class LocationAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     """Настройка раздела Публикации."""
 
@@ -38,8 +41,3 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('title', 'text')
     ordering = ('-created_at',)
     list_display_links = ('title',)
-
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(Post, PostAdmin)

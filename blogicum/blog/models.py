@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from blog.const import TITLE_MAX_LENGTH, NAME_MAX_LENGTH
+from blog.const import TITLE_OR_NAME_MAX_LENGTH, TITLE_OR_NAME_SLICE
 
 User = get_user_model()
 
@@ -29,7 +29,7 @@ class TitleModel(models.Model):
 
     title = models.CharField(
         'Заголовок',
-        max_length=TITLE_MAX_LENGTH
+        max_length=TITLE_OR_NAME_MAX_LENGTH
     )
 
     class Meta:
@@ -52,7 +52,7 @@ class Category(TitleModel, PublishedCreatedModel):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.title
+        return self.title[:TITLE_OR_NAME_SLICE]
 
 
 class Location(PublishedCreatedModel):
@@ -60,7 +60,7 @@ class Location(PublishedCreatedModel):
 
     name = models.CharField(
         'Название места',
-        max_length=NAME_MAX_LENGTH
+        max_length=TITLE_OR_NAME_MAX_LENGTH
     )
 
     class Meta:
@@ -68,7 +68,7 @@ class Location(PublishedCreatedModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
-        return self.name
+        return self.name[:TITLE_OR_NAME_SLICE]
 
 
 class Post(TitleModel, PublishedCreatedModel):
@@ -84,7 +84,6 @@ class Post(TitleModel, PublishedCreatedModel):
         User,
         verbose_name='Автор публикации',
         on_delete=models.CASCADE,
-        related_name='authors'
     )
     location = models.ForeignKey(
         Location,
@@ -92,20 +91,19 @@ class Post(TitleModel, PublishedCreatedModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='locations'
     )
     category = models.ForeignKey(
         Category,
         verbose_name='Категория',
         on_delete=models.SET_NULL,
         null=True,
-        related_name='categories'
     )
 
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
         ordering = ('-pub_date',)
+        default_related_name = 'posts'
 
     def __str__(self):
-        return self.title
+        return self.title[:TITLE_OR_NAME_SLICE]
