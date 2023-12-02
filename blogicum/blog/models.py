@@ -12,11 +12,11 @@ class PublishedCreatedModel(models.Model):
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
+        help_text='Снимите галочку, чтобы скрыть публикацию.',
     )
     created_at = models.DateTimeField(
         'Добавлено',
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     class Meta:
@@ -29,7 +29,7 @@ class TitleModel(models.Model):
 
     title = models.CharField(
         'Заголовок',
-        max_length=MAX_LENGTH
+        max_length=MAX_LENGTH,
     )
 
     class Meta:
@@ -44,7 +44,7 @@ class Category(TitleModel, PublishedCreatedModel):
         'Идентификатор',
         unique=True,
         help_text='Идентификатор страницы для URL; разрешены символы '
-        'латиницы, цифры, дефис и подчёркивание.'
+        'латиницы, цифры, дефис и подчёркивание.',
     )
 
     class Meta(PublishedCreatedModel.Meta):
@@ -60,7 +60,7 @@ class Location(PublishedCreatedModel):
 
     name = models.CharField(
         'Название места',
-        max_length=MAX_LENGTH
+        max_length=MAX_LENGTH,
     )
 
     class Meta(PublishedCreatedModel.Meta):
@@ -78,7 +78,7 @@ class Post(TitleModel, PublishedCreatedModel):
     pub_date = models.DateTimeField(
         'Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно '
-        'делать отложенные публикации.'
+        'делать отложенные публикации.',
     )
     author = models.ForeignKey(
         User,
